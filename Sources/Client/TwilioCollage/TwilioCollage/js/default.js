@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
     // Uncomment the following line to enable first chance exceptions.
-    //Debug.enableFirstChanceException(true);
+    Debug.enableFirstChanceException(true);
 
     ///////////////////////////////////////////////////////////////////////////
     // CONFIGURATION
@@ -56,7 +56,7 @@
     var canvasArea;
     var imageList = new Array();
 
-    var enableInProcessEffects   = false; // doens't work currently
+    var enableInProcessEffects   = false; // doesn't work currently
     var enablePostProcessEffects = false; // fun, but bad perf
     var enableGlowShadowing      = false; // simple canned effect from canvas
     var enableImageAlpha         = false; // image transparency
@@ -288,7 +288,17 @@
         var vrot = Math.random() / 150;    // rotational velocity
 
         var idName = "image" + id;
-        imageList[imageCount] = new Array (idName, 1, 1, 0, vx, vy, vrot); // id, xPosition, yPosition, rotation, x-velocity, y-velocity
+
+        var imageProps  = new Object();
+        imageProps.id   = idName;
+        imageProps.posX = 1;
+        imageProps.posY = 1;
+        imageProps.rot  = 0;
+        imageProps.vX   = vx;
+        imageProps.vY   = vy;
+        imageProps.vRot = vrot;
+
+        imageList[imageCount] = imageProps; // id, xPosition, yPosition, rotation, x-velocity, y-velocity
         imageCount++;
 
         images_area.innerHTML += "<img id=\"" + idName + "\" src=\"" + src + "\" alt=\"" + alt + "\" style=\"display:none\" />";
@@ -329,36 +339,40 @@
         var listLength = imageList.length;
 
         for (var i = 0; i < listLength; i++) {
-            var dx = imageList[i][1];
-            var dy = imageList[i][2];
-            var rot = imageList[i][3];
+            var dx = imageList[i].posX;
+            var dy = imageList[i].posY;
+            var rot = imageList[i].rot;
             var vFlip, hFlip = false;
             hFlip = true;
 
 
             // get the image using the id stored in the image list
-            var imageId = imageList[i][0];
+            var imageId = imageList[i].id;
             var image = document.getElementById(imageId);                   
 
-            // flip velocity if the image is going off-screen
-            if (dx + image.naturalWidth >= canvasWidth || dx <= 0) {
-                imageList[i][1] -= (imageList[i][4] * 2);   // bounce off side
-                imageList[i][4] *= -1;                      // flip velocity
-                if (hFlip && dx <= 0) imageList[i][6] *= -1;           // flip rotation
-            }
-            if (dy + image.naturalHeight >= canvasHeight || dy <= 0) {
-                imageList[i][2] -= (imageList[i][5] * 2);              // bounce off bottom
-                imageList[i][5] *= -1;                                 // reverse velocity
+            // TODO: there's a bug in the case where the images hit the left / top (i.e. when posX/posY <=0 ...)
+            //       this is a little tricky though because the start position for the images is 0,0
+            //       need to do more math to determine more accurate position of image edges to prevent offscreen bounce
 
-                // Vertical flipping can be a little jarring
-                if (vFlip && dy <= 0) imageList[i][6] *= -1;           // flip rotation
+            // flip velocity if the image is going off-screen
+            if ((imageList[i].posX + image.naturalWidth >= canvasWidth) || (imageList[i].posX <= 0 && imageList[i].vX)) {
+                imageList[i].posX -= (imageList[i].vX * 2);    // bounce off side
+                imageList[i].vX   *= -1;                       // flip velocity
+                if (hFlip && dx <= 0) imageList[i].vRot *= -1; // flip rotation
+            }
+            if ((imageList[i].posY + image.naturalHeight >= canvasHeight) || (imageList[i].posY <= 0)) {                
+                imageList[i].posY -= (imageList[i].vY * 2);    // bounce off bottom                
+                imageList[i].vY *= -1;                         // reverse velocity
+
+                // NOTE: Vertical rotation flipping can be a little jarring
+                if (vFlip && dy <= 0) imageList[i].vRot *= -1;   // flip rotation
             }
 
             // set canvas position for drawing
             context.save();
             //if (enableInProcessEffects) inProcessImageEffect(image);
-            context.translate(dx, dy);
-            context.rotate(rot);
+            context.translate(imageList[i].posX, imageList[i].posY);
+            context.rotate(imageList[i].rot);
 
             // draw, restore context for the next image
             if (enableGlowShadowing) {
@@ -373,9 +387,9 @@
             if (image) context.drawImage(image, 0, 0); // sWidth,sHeight) TODO image scaling with / height            
 
             // Done rendering, translate for animation
-            imageList[i][1] += imageList[i][4]; // translate about x by vx
-            imageList[i][2] += imageList[i][5]; // translate about y by vy
-            imageList[i][3] += imageList[i][6]; // rotate
+            imageList[i].posX += imageList[i].vX;   // translate about x by vx
+            imageList[i].posY += imageList[i].vY;   // translate about y by vy
+            imageList[i].rot  += imageList[i].vRot; // rotate
 
             context.restore();
         }
