@@ -1,0 +1,27 @@
+Synopsis:
+----------------------------------------------------------------------------
+The TwilioCollage project is a very basic application that demonstrates
+
+
+
+Usage:
+----------------------------------------------------------------------------
+To use the actual Collage tool, send a text message from your phone to your Twilio number with a URL in the text message.  For example, if you are using the sandbox and your sandbox pin is 1234-4321, send a text message:
+    to: 415.599.2671
+    msg: 1234-4321 http://wheresgus.com/cat.png
+
+You can keep adding images to the collage while it runs
+
+If you want to reset the entire collage, send a text message to the Twilio number with the sandbox code (as necessary) and the word reset in the body.  Note, currently this will not call any user, you must be whitelisted as an administrator to trigger the reset.
+    to: 415.599.2671
+    msg: 1234-4321 reset 
+
+When the reset command is triggered, you will receive a call with an IVR menu.  When prompted, press 1 on your phoneÎéÎ÷s keypad and the collage will reset.
+From the client, you can also initiate the IVR reset by right-clicking to bring up the app bar and then clicking the Reset button.
+
+
+Additional documentation:
+----------------------------------------------------------------------------
+Please see the pdf and Word docs for more detailed information about this project.
+
+
