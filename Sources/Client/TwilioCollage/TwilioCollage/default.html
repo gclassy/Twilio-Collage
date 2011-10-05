@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>TwilioCollage rev: 1</title>
+    <!-- WinJS references -->
+    <link rel="stylesheet" href="/winjs/css/ui-dark.css" />
+    <script src="/winjs/js/base.js"></script>
+    <script src="/winjs/js/ui.js"></script>
+    <script src="/winjs/js/binding.js"></script>
+    <script src="/winjs/js/controls.js"></script>
+    <script src="/winjs/js/animations.js"></script>
+    <script src="/winjs/js/uicollections.js"></script>
+    <script src="/winjs/js/wwaapp.js"></script>
+    <!-- TwilioCollage references -->
+    <link rel="stylesheet" href="/css/default.css" />
+    <script src="/js/default.js"></script>
+</head>
+<body>
+    <div id="title"><h1>TwilioCollage</h1></div>    
+    <div id="statusDiv">Nothing to see here ... yet!</div>
+    <div role="region" class="item" id="images_area"></div>
+    <section role="main" aria-label="Collage Area">
+    <div>
+        <canvas id="collageArea" width="1024" height="768"></canvas>
+    </div>    
+    </section>
+    <div id="theAppBar" data-win-control="WinJS.UI.AppBar" aria-label="Command Bar" data-win-options="{position:'bottom', transient:true, autohide:0, lightDismiss:false}" >        
+        <div class="win-left">
+                <button id="home" class="win-command">
+                    <span class="win-commandicon win-large">&#xE10F;</span><span class="win-label">Home</span>
+                </button>
+                <hr />
+                <button id="glow" class="win-command">
+                    <span class="win-commandicon win-large">&#x2383;</span><span class="win-label">Glow</span>
+                </button>
+                <hr />
+                <button id="reset" class="win-command">
+                    <span class="win-commandicon win-large">&#x260E;</span><span class="win-label">Reset</span>
+                </button>
+        </div>
+    </div>
+</body>
+</html>
