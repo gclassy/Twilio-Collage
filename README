@@ -1,6 +1,6 @@
 Synopsis:
 ----------------------------------------------------------------------------
-The TwilioCollage project is a very basic application that demonstrates
+The TwilioCollage project is a very basic application that demonstrates integration between Windows 8 Metro style apps and the Twilio SMS/Voice service. You can send images to a collage using text messages and an IVR system will prompt administrative resets of the collage.
 
 
 
